@@ -4,6 +4,7 @@ import * as fs from 'fs/promises'
 import * as path from 'path'
 import Form from "../components/molecules/Form/Form";
 import Header from "../components/organisms/Header/Header"
+import { createContext } from "react";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // JSON ファイルを読み込む
@@ -18,13 +19,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
+export const CityContext = createContext()
 
 
 const Home: NextPage = ({ cityInfo }) => {
   return (
     <div>
       <Header />
-      <Form props={cityInfo}/>
+      <CityContext.Provider value={cityInfo}>
+      <Form/>
+      </CityContext.Provider>
     </div>
   );
 };
