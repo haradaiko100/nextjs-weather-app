@@ -6,11 +6,14 @@ import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import {CityContext} from "../../../pages/index"
+import { CityContext } from "../../../pages/index";
+import Header from "../../organisms/Header/Header";
+import SearchList from "../../atoms/SearchList/SearchList";
+import Input from "../../atoms/Input/Input";
 
-//const cityInfo = useContext(CityContext)
 
-type item = {
+
+type cityProps = {
   id: number;
   name: string;
   state: string;
@@ -23,38 +26,26 @@ type coord = {
   lat: number;
 };
 
-type matchItem = {
-  id: number;
-  name: string;
-  state: string;
-  country: string;
-  coord: coord;
+type Item = cityProps & {
   slug: string;
 };
 
 const Form = () => {
-  //const [location, setLocation] = useState<string>("");
-  const [results, setResults] = useState<matchItem[]>([]);
-
+  const [results, setResults] = useState<Item[]>([]);
   const [query, setQuery] = useState("");
-  const router = useRouter()
-
-  const cityInfo = useContext(CityContext)
-  // console.log(cityInfo)
+  const cityInfo = useContext(CityContext);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    //setLocation(e.target.value);
     setQuery(e.target.value);
 
-    let matchingCities = [] as matchItem[];
+    let matchingCities = [] as Item[];
 
     if (e.target.value.length >= 3) {
-      //cityInfo.props.forEach((city: item) =>
       for (let city of cityInfo) {
         if (matchingCities.length >= 10) {
           break;
         }
-        //console.log(city);
+
         const match = city.name
           .toLowerCase()
           .startsWith(e.target.value.toLowerCase());
@@ -74,36 +65,18 @@ const Form = () => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search for location"
-        required
-        onChange={(e) => handleChange(e)}
-      />
+    <div className="flex flex-col items-center text-4xl space-y-5 ">
+      <Input onChange={(e) => handleChange(e)} 
+      className="  bg-orange-200 rounded-2xl"/>
 
       {query.length >= 3 && (
-        <ul>
+        <ul className=" text-2xl text-gray-500">
           {results.length > 0 ? (
             results.map((city) => {
-              return (
-                <li key={city.id} >
-                  <Link
-                    href={{
-                      pathname: `/location/${city.id}`,
-                    }}
-                  >
-                    <div>
-                      {city.name}
-                      {city.state ? `, ${city.state}` : ""}{" "}
-                      <span>({city.country})</span>
-                    </div>
-                  </Link>
-                </li>
-              );
+              return <SearchList {...city} key={city.id} />;
             })
           ) : (
-            <li className="search__no-results">No results found</li>
+            <li className="">No results found</li>
           )}
         </ul>
       )}

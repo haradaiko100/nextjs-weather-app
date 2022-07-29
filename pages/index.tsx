@@ -1,10 +1,24 @@
 import type { GetStaticProps, NextPage } from "next";
-import Head from "next/head";
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import Form from "../components/molecules/Form/Form";
 import Header from "../components/organisms/Header/Header"
 import { createContext } from "react";
+
+
+type cityProps = {
+  id: number;
+  name: string;
+  state: string;
+  country: string;
+  coord: coord;
+};
+
+type coord = {
+  lon: number;
+  lat: number;
+};
+
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // JSON ファイルを読み込む
@@ -19,13 +33,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
   };
 };
 
-export const CityContext = createContext()
+export const CityContext = createContext<cityProps[]>([])
 
 
 const Home: NextPage = ({ cityInfo }) => {
   return (
-    <div>
-      <Header />
+    <div className="items-center space-y-20">
+      <Header/>
       <CityContext.Provider value={cityInfo}>
       <Form/>
       </CityContext.Provider>

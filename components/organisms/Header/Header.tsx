@@ -1,8 +1,6 @@
 const Header = () => {
   return (
-    <div>
-      <h1>Weather Forecast</h1>
-    </div>
+      <h1 className=" text-center bg- text-6xl font-thin text-white bg-gray-800">Weather Forecast</h1>
   );
 };
 
